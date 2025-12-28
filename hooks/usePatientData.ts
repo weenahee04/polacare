@@ -11,6 +11,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext.mock';
 import { apiService, ApiError } from '../services/apiService';
 import { PatientCase, UserProfile, ChecklistItem, MedicalChecklist } from '../types';
+import { getMockCasesByHN, getMockCaseById } from '../data/mockCases';
 
 // ============================================
 // TYPES
@@ -150,30 +151,52 @@ export function useCases(): UseCasesResult {
   const [error, setError] = useState<string | null>(null);
 
   const fetchCases = useCallback(async () => {
-    if (!token) {
-      // Mock mode - return empty array
-      setCases([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
+      // Check if in mock mode
+      if (!token || token.startsWith('mock_token_')) {
+        // Mock mode - get current user's HN from localStorage
+        const storedUser = localStorage.getItem('polacare_user');
+        if (storedUser) {
+          try {
+            const user = JSON.parse(storedUser);
+            const mockCases = getMockCasesByHN(user.hn || 'HN-123456');
+            setCases(mockCases);
+          } catch (e) {
+            // Fallback to default HN
+            const mockCases = getMockCasesByHN('HN-123456');
+            setCases(mockCases);
+          }
+        } else {
+          // No user - return empty
+          setCases([]);
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // Real API mode
       const response = await apiService.getCases(token);
       const mappedCases = (response.cases || []).map(mapApiCaseToPatientCase);
       setCases(mappedCases);
     } catch (err) {
-      // Mock mode - return empty array instead of error
-      if (token && token.startsWith('mock_token_')) {
-        setCases([]);
-        setError(null);
+      // Fallback to mock data on error
+      const storedUser = localStorage.getItem('polacare_user');
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          const mockCases = getMockCasesByHN(user.hn || 'HN-123456');
+          setCases(mockCases);
+        } catch (e) {
+          setCases([]);
+        }
       } else {
-        const message = err instanceof ApiError ? err.message : 'Failed to load records';
-        setError(message);
         setCases([]);
       }
+      const message = err instanceof ApiError ? err.message : 'Failed to load records';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -219,17 +242,8 @@ export function useCaseDetail(caseId: string | null): UseCaseDetailResult {
   const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   const fetchCase = useCallback(async () => {
-    if (!token || !caseId) {
+    if (!caseId) {
       setCaseData(null);
-      return;
-    }
-
-    // Mock mode - return empty if mock token
-    if (token.startsWith('mock_token_')) {
-      setCaseData(null);
-      setIsLoading(false);
-      setError(null);
-      setIsUnauthorized(false);
       return;
     }
 
@@ -238,27 +252,54 @@ export function useCaseDetail(caseId: string | null): UseCaseDetailResult {
     setIsUnauthorized(false);
 
     try {
+      // Check if in mock mode
+      if (!token || token.startsWith('mock_token_')) {
+        // Mock mode - get mock case by ID
+        const mockCase = getMockCaseById(caseId);
+        if (mockCase) {
+          setCaseData(mockCase);
+        } else {
+          setError('ไม่พบข้อมูลที่ต้องการ (Record not found)');
+          setCaseData(null);
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // Real API mode
       const response = await apiService.getCaseById(caseId, token);
       if (response.case) {
         setCaseData(mapApiCaseToPatientCase(response.case));
       } else {
-        setError('Case not found');
-        setCaseData(null);
+        // Fallback to mock data
+        const mockCase = getMockCaseById(caseId);
+        if (mockCase) {
+          setCaseData(mockCase);
+        } else {
+          setError('Case not found');
+          setCaseData(null);
+        }
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        if (err.status === 401 || err.status === 403) {
-          setIsUnauthorized(true);
-          setError('คุณไม่มีสิทธิ์เข้าถึงข้อมูลนี้ (Unauthorized access)');
-        } else if (err.status === 404) {
-          setError('ไม่พบข้อมูลที่ต้องการ (Record not found)');
-        } else {
-          setError(err.message);
-        }
+      // Fallback to mock data on error
+      const mockCase = getMockCaseById(caseId);
+      if (mockCase) {
+        setCaseData(mockCase);
       } else {
-        setError('Failed to load case details');
+        if (err instanceof ApiError) {
+          if (err.status === 401 || err.status === 403) {
+            setIsUnauthorized(true);
+            setError('คุณไม่มีสิทธิ์เข้าถึงข้อมูลนี้ (Unauthorized access)');
+          } else if (err.status === 404) {
+            setError('ไม่พบข้อมูลที่ต้องการ (Record not found)');
+          } else {
+            setError(err.message);
+          }
+        } else {
+          setError('Failed to load case details');
+        }
+        setCaseData(null);
       }
-      setCaseData(null);
     } finally {
       setIsLoading(false);
     }
