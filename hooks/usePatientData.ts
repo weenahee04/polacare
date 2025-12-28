@@ -107,9 +107,17 @@ export function useProfile(): UseProfileResult {
     setIsLoading(true);
     setError(null);
     try {
-      await loadProfile();
+      // Mock mode - loadProfile might not exist
+      if (loadProfile) {
+        await loadProfile();
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load profile');
+      // Mock mode - ignore errors if no loadProfile
+      if (!loadProfile) {
+        setError(null);
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to load profile');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +150,12 @@ export function useCases(): UseCasesResult {
   const [error, setError] = useState<string | null>(null);
 
   const fetchCases = useCallback(async () => {
-    if (!token) return;
+    if (!token) {
+      // Mock mode - return empty array
+      setCases([]);
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
@@ -152,9 +165,15 @@ export function useCases(): UseCasesResult {
       const mappedCases = (response.cases || []).map(mapApiCaseToPatientCase);
       setCases(mappedCases);
     } catch (err) {
-      const message = err instanceof ApiError ? err.message : 'Failed to load records';
-      setError(message);
-      setCases([]);
+      // Mock mode - return empty array instead of error
+      if (token && token.startsWith('mock_token_')) {
+        setCases([]);
+        setError(null);
+      } else {
+        const message = err instanceof ApiError ? err.message : 'Failed to load records';
+        setError(message);
+        setCases([]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +183,10 @@ export function useCases(): UseCasesResult {
   useEffect(() => {
     if (isAuthenticated && token) {
       fetchCases();
+    } else if (isAuthenticated && !token) {
+      // Mock mode - no token but authenticated
+      setCases([]);
+      setIsLoading(false);
     }
   }, [isAuthenticated, token, fetchCases]);
 
@@ -198,6 +221,15 @@ export function useCaseDetail(caseId: string | null): UseCaseDetailResult {
   const fetchCase = useCallback(async () => {
     if (!token || !caseId) {
       setCaseData(null);
+      return;
+    }
+
+    // Mock mode - return empty if mock token
+    if (token.startsWith('mock_token_')) {
+      setCaseData(null);
+      setIsLoading(false);
+      setError(null);
+      setIsUnauthorized(false);
       return;
     }
 

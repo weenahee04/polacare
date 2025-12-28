@@ -23,6 +23,7 @@ interface AuthContextType {
   login: (phoneNumber: string, password: string) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
   clearError: () => void;
+  loadProfile?: () => Promise<void>; // Optional for mock mode
 }
 
 interface RegisterData {
