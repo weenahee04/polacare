@@ -192,7 +192,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onSw
                   const val = e.target.value.replace(/\D/g, '');
                   if (val.length <= 10) setFormData({...formData, phoneNumber: val});
                 }}
-                className="w-full rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm py-3 pl-24 pr-4 text-sm text-slate-800 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit tracking-wide shadow-sm disabled:opacity-50"
+                className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-24 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit tracking-wide shadow-sm disabled:opacity-50"
                 placeholder="xx-xxx-xxxx"
                 disabled={isLoading}
                 required
