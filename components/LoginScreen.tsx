@@ -135,7 +135,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onSwitchToReg
                     const val = e.target.value.replace(/\D/g, ''); // Only numbers
                     if (val.length <= 10) setPhoneNumber(val);
                   }}
-                  className="w-full rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm py-4 pl-24 pr-4 text-base text-slate-800 outline-none focus:border-[#0056b3] focus:ring-2 focus:ring-[#0056b3]/20 font-kanit transition-all tracking-wide shadow-sm"
+                  className="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-24 pr-4 text-base text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#0056b3] focus:ring-2 focus:ring-[#0056b3]/20 font-kanit transition-all tracking-wide shadow-sm"
                   placeholder="xx-xxx-xxxx"
                   disabled={isLoading}
                   required
@@ -189,7 +189,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onSwitchToReg
                     const val = e.target.value.replace(/\D/g, '');
                     if (val.length <= 6) setOtp(val);
                   }}
-                  className="w-full rounded-2xl border border-slate-200 bg-white/80 backdrop-blur-sm py-4 pl-12 pr-4 text-center text-xl font-bold text-slate-800 outline-none focus:border-[#0056b3] focus:ring-2 focus:ring-[#0056b3]/20 font-kanit transition-all tracking-[0.5em] shadow-sm"
+                  className="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-12 pr-4 text-center text-xl font-bold text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#0056b3] focus:ring-2 focus:ring-[#0056b3]/20 font-kanit transition-all tracking-[0.5em] shadow-sm"
                   placeholder="• • • • • •"
                   maxLength={6}
                   autoFocus

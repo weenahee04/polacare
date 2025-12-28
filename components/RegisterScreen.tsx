@@ -159,7 +159,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onSw
                     type="text" 
                     value={formData.firstName}
                     onChange={e => setFormData({...formData, firstName: e.target.value})}
-                    className="w-full rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm py-3 px-4 text-sm text-slate-800 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit shadow-sm disabled:opacity-50"
+                    className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit shadow-sm disabled:opacity-50"
                     disabled={isLoading}
                     required
                 />
@@ -170,7 +170,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onSw
                     type="text" 
                     value={formData.lastName}
                     onChange={e => setFormData({...formData, lastName: e.target.value})}
-                    className="w-full rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm py-3 px-4 text-sm text-slate-800 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit shadow-sm disabled:opacity-50"
+                    className="w-full rounded-xl border border-slate-200 bg-white py-3 px-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#0056b3] focus:ring-1 focus:ring-[#0056b3] font-kanit shadow-sm disabled:opacity-50"
                     disabled={isLoading}
                     required
                 />
