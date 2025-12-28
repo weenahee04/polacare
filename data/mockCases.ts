@@ -91,7 +91,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 10, 5),
-    imageUrl: 'https://picsum.photos/800/600?random=3', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
+    imageUrl: 'https://media.discordapp.net/attachments/865267722606870600/1454967445847539823/180829_0003.jpg?ex=69530387&is=6951b207&hm=9e5895bc61f0fecbbb9f8a89d3ea82476caeaae08a1c92a1775f7ac7337fdaa1&=&format=webp&width=800&height=600',
     aiAnalysisText: 'การตรวจครั้งนี้เป็นการตรวจสุขภาพตาเบื้องต้น พบว่าสุขภาพตาทั้งสองข้างอยู่ในเกณฑ์ปกติ แนะนำให้มาตรวจซ้ำทุก 6 เดือน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -121,7 +121,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 9, 12),
-    imageUrl: 'https://picsum.photos/800/600?random=4', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
+    imageUrl: 'https://media.discordapp.net/attachments/865267722606870600/1454967458552348714/blurred-vision-1.jpg.xl.webp?ex=6953038a&is=6951b20a&hm=b7d01fdd5a677f5f0bde8008743f0a5372e0b3951895b9d724d29e8efbd96c3d&=&format=webp&width=800&height=600',
     aiAnalysisText: 'ผู้ป่วยมาด้วยอาการตาแห้งและระคายเคือง ตรวจพบว่ามีอาการตาแห้งเล็กน้อย แนะนำให้ใช้น้ำตาเทียมและหลีกเลี่ยงการจ้องหน้าจอเป็นเวลานาน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Mild dryness', isObserved: true, isVerified: true },
@@ -151,7 +151,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 8, 18),
-    imageUrl: 'https://picsum.photos/800/600?random=5', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
+    imageUrl: 'https://media.discordapp.net/attachments/865267722606870600/1454967468706631894/images_1.jfif?ex=6953038c&is=6951b20c&hm=ca64f03e56c6e0d992f4879dbd195387ba30aa55e9efbb18b538fa3fca89cc10&=&format=webp&width=800&height=600',
     aiAnalysisText: 'การตรวจพบว่าตาขวามีอาการดีขึ้นมากหลังจากใช้ยาตามที่แพทย์สั่ง แนะนำให้ติดตามอาการต่อเนื่อง',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
