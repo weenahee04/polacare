@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Eye, EyeOff, Lock, Phone, User, ArrowLeft, Camera, Calendar, Weight, Ruler, Loader2, AlertCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext.mock';
 
 interface RegisterScreenProps {
   onRegister: () => void;

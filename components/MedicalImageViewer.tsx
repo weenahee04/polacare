@@ -197,3 +197,5 @@ const MedicalImageViewer: React.FC<MedicalImageViewerProps> = ({
 
 export default MedicalImageViewer;
 
+
+
