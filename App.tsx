@@ -11,8 +11,8 @@ import {
   AlertCircle,
   RefreshCw,
 } from 'lucide-react';
-// Use mock AuthContext for standalone deployment (no backend required)
-import { AuthProvider, useAuth } from './contexts/AuthContext.mock';
+// Use real AuthContext to connect with backend
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useCases, useCaseDetail } from './hooks/usePatientData';
 import { PatientDashboard } from './components/PatientDashboard';
 import { LoginScreen } from './components/LoginScreen';

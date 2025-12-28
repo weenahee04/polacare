@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../contexts/AuthContext.mock';
+import { useAuth } from '../contexts/AuthContext';
 import { apiService, ApiError } from '../services/apiService';
 import { PatientCase, UserProfile, ChecklistItem, MedicalChecklist } from '../types';
 

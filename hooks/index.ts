@@ -5,7 +5,7 @@
  */
 
 // Auth hooks
-export { useAuth } from '../contexts/AuthContext.mock';
+export { useAuth } from '../contexts/AuthContext';
 
 // API hooks
 export { useApi, useCases as useApiCases, useMedications as useApiMedications, useVisionTests as useApiVisionTests, useArticles as useApiArticles } from './useApi';

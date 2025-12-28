@@ -6,7 +6,7 @@
  */
 
 import { useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext.mock';
+import { useAuth } from '../contexts/AuthContext';
 
 interface UseRequireAuthOptions {
   onUnauthenticated?: () => void;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, ArrowRight, MessageSquare, ChevronLeft, Loader2, AlertCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext.mock';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LoginScreenProps {
   onLogin: () => void;

@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useAuth } from '../contexts/AuthContext.mock';
+import { useAuth } from '../contexts/AuthContext';
 import { apiService, ApiError } from '../services/apiService';
 
 interface UseApiState<T> {
