@@ -178,9 +178,11 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
 
 /**
  * Get mock cases for a specific patient (by HN)
+ * In mock mode, always return all cases regardless of HN
  */
 export function getMockCasesByHN(hn: string): PatientCase[] {
-  return MOCK_PATIENT_CASES.filter(case_ => case_.hn === hn);
+  // In mock mode, return all cases (we'll update HN later)
+  return MOCK_PATIENT_CASES.map(case_ => ({ ...case_ }));
 }
 
 /**

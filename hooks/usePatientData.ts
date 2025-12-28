@@ -159,6 +159,8 @@ export function useCases(): UseCasesResult {
       if (!token || token.startsWith('mock_token_')) {
         // Mock mode - always show mock data (use default HN)
         const mockCases = getMockCasesByHN('HN-123456');
+        console.log('[useCases] Mock mode - Found', mockCases.length, 'mock cases');
+        
         // Update HN to match current user if available
         const storedUser = localStorage.getItem('polacare_user');
         if (storedUser) {
@@ -169,11 +171,14 @@ export function useCases(): UseCasesResult {
               hn: user.hn || case_.hn,
               patientName: user.name || case_.patientName,
             }));
+            console.log('[useCases] Updated cases with user data:', updatedCases.length);
             setCases(updatedCases);
           } catch (e) {
+            console.log('[useCases] Error parsing user, using default cases');
             setCases(mockCases);
           }
         } else {
+          console.log('[useCases] No user found, using default cases');
           setCases(mockCases);
         }
         setIsLoading(false);
