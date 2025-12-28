@@ -61,7 +61,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 11, 20),
-    imageUrl: 'https://picsum.photos/800/600?random=2', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
+    imageUrl: 'https://media.discordapp.net/attachments/865267722606870600/1454967433843703919/m-img-ca1df370637de0c95f799368a0cde293.jpg?ex=69530384&is=6951b204&hm=2c87bf9c33d7339c57da65df0b735b5c301029eda3a3521e2c6fb4d93eb81981&=&format=webp&width=900&height=600',
     aiAnalysisText: 'ผลการตรวจพบว่าตาขวามีอาการดีขึ้นเมื่อเทียบกับการตรวจครั้งก่อน แนะนำให้ใช้ยาตามที่แพทย์สั่งอย่างสม่ำเสมอ',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
