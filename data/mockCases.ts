@@ -29,7 +29,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 12, 15),
-    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop&q=90',
     aiAnalysisText: 'พบความผิดปกติเล็กน้อยที่บริเวณ macula ของตาขวา แนะนำให้ติดตามอาการอย่างใกล้ชิด และมาตรวจซ้ำในอีก 3 เดือน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -59,7 +59,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 11, 20),
-    imageUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=600&fit=crop&q=90',
     aiAnalysisText: 'ผลการตรวจพบว่าตาขวามีอาการดีขึ้นเมื่อเทียบกับการตรวจครั้งก่อน แนะนำให้ใช้ยาตามที่แพทย์สั่งอย่างสม่ำเสมอ',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -89,7 +89,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 10, 5),
-    imageUrl: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=400&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&q=90',
     aiAnalysisText: 'การตรวจครั้งนี้เป็นการตรวจสุขภาพตาเบื้องต้น พบว่าสุขภาพตาทั้งสองข้างอยู่ในเกณฑ์ปกติ แนะนำให้มาตรวจซ้ำทุก 6 เดือน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -119,7 +119,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 9, 12),
-    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop&q=90',
     aiAnalysisText: 'ผู้ป่วยมาด้วยอาการตาแห้งและระคายเคือง ตรวจพบว่ามีอาการตาแห้งเล็กน้อย แนะนำให้ใช้น้ำตาเทียมและหลีกเลี่ยงการจ้องหน้าจอเป็นเวลานาน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Mild dryness', isObserved: true, isVerified: true },
@@ -149,7 +149,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 8, 18),
-    imageUrl: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=400&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&h=600&fit=crop&q=90',
     aiAnalysisText: 'การตรวจพบว่าตาขวามีอาการดีขึ้นมากหลังจากใช้ยาตามที่แพทย์สั่ง แนะนำให้ติดตามอาการต่อเนื่อง',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
