@@ -157,21 +157,23 @@ export function useCases(): UseCasesResult {
     try {
       // Check if in mock mode
       if (!token || token.startsWith('mock_token_')) {
-        // Mock mode - get current user's HN from localStorage
+        // Mock mode - always show mock data (use default HN)
+        const mockCases = getMockCasesByHN('HN-123456');
+        // Update HN to match current user if available
         const storedUser = localStorage.getItem('polacare_user');
         if (storedUser) {
           try {
             const user = JSON.parse(storedUser);
-            const mockCases = getMockCasesByHN(user.hn || 'HN-123456');
-            setCases(mockCases);
+            const updatedCases = mockCases.map(case_ => ({
+              ...case_,
+              hn: user.hn || case_.hn,
+              patientName: user.name || case_.patientName,
+            }));
+            setCases(updatedCases);
           } catch (e) {
-            // Fallback to default HN
-            const mockCases = getMockCasesByHN('HN-123456');
             setCases(mockCases);
           }
         } else {
-          // No user - use default HN to show mock data
-          const mockCases = getMockCasesByHN('HN-123456');
           setCases(mockCases);
         }
         setIsLoading(false);
@@ -184,17 +186,22 @@ export function useCases(): UseCasesResult {
       setCases(mappedCases);
     } catch (err) {
       // Fallback to mock data on error
+      const mockCases = getMockCasesByHN('HN-123456');
       const storedUser = localStorage.getItem('polacare_user');
       if (storedUser) {
         try {
           const user = JSON.parse(storedUser);
-          const mockCases = getMockCasesByHN(user.hn || 'HN-123456');
-          setCases(mockCases);
+          const updatedCases = mockCases.map(case_ => ({
+            ...case_,
+            hn: user.hn || case_.hn,
+            patientName: user.name || case_.patientName,
+          }));
+          setCases(updatedCases);
         } catch (e) {
-          setCases([]);
+          setCases(mockCases);
         }
       } else {
-        setCases([]);
+        setCases(mockCases);
       }
       const message = err instanceof ApiError ? err.message : 'Failed to load records';
       setError(message);
