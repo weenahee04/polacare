@@ -6,7 +6,7 @@
   
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm ci",
+  "installCommand": "npm install",
   
   "routes": [
     {
@@ -45,10 +45,9 @@
     }
   ],
   
-  "env": {
-    "VITE_API_URL": "@vite_api_url"
-  },
   
   "regions": ["sin1"]
 }
+
+
 
