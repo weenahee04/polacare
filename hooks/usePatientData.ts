@@ -170,8 +170,9 @@ export function useCases(): UseCasesResult {
             setCases(mockCases);
           }
         } else {
-          // No user - return empty
-          setCases([]);
+          // No user - use default HN to show mock data
+          const mockCases = getMockCasesByHN('HN-123456');
+          setCases(mockCases);
         }
         setIsLoading(false);
         return;
@@ -204,14 +205,15 @@ export function useCases(): UseCasesResult {
 
   // Fetch on mount when authenticated
   useEffect(() => {
-    if (isAuthenticated && token) {
+    if (isAuthenticated) {
+      // Always fetch cases when authenticated (works for both mock and real mode)
       fetchCases();
-    } else if (isAuthenticated && !token) {
-      // Mock mode - no token but authenticated
+    } else {
+      // Not authenticated - clear cases
       setCases([]);
       setIsLoading(false);
     }
-  }, [isAuthenticated, token, fetchCases]);
+  }, [isAuthenticated, fetchCases]);
 
   return {
     cases,
