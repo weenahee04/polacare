@@ -1,0 +1,67 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+#
+# Deploy: Connect GitHub repo to Render, it will auto-detect this file
+
+services:
+  # ============================================
+  # Backend API (Free Web Service)
+  # ============================================
+  - type: web
+    name: polacare-api
+    runtime: node
+    region: singapore  # Closest to Thailand
+    plan: free
+    
+    # Build configuration
+    buildCommand: |
+      cd backend
+      npm ci
+      npx prisma generate
+      npm run build
+    
+    # Start command
+    startCommand: |
+      cd backend
+      npx prisma migrate deploy
+      npm start
+    
+    # Health check
+    healthCheckPath: /health
+    
+    # Environment variables (set in Render dashboard)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: API_VERSION
+        value: v1
+      - key: DATABASE_URL
+        sync: false  # Set manually in dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Render generates a secure value
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        sync: false  # Set to your Vercel domain
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "100"
+    
+    # Auto-deploy on push to main
+    autoDeploy: true
+    
+    # Branch to deploy
+    branch: main
+    
+    # Root directory
+    rootDir: ./
+
+# Notes:
+# 1. Free tier spins down after 15 minutes of inactivity
+# 2. First request after spin-down takes ~30 seconds
+# 3. 750 hours/month free (enough for 1 service)
+# 4. Custom domains available on free tier
+

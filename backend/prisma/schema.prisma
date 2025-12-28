@@ -1,0 +1,409 @@
+// POLACARE Database Schema
+// Prisma Schema for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================
+
+enum UserRole {
+  patient
+  doctor
+  admin
+}
+
+enum Gender {
+  Male
+  Female
+  Other
+}
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  phoneNumber   String    @unique @map("phone_number") @db.VarChar(20)
+  password      String    @db.VarChar(255) // bcrypt hashed
+  name          String    @db.VarChar(255)
+  hn            String    @unique @db.VarChar(50) // Hospital Number - display identifier
+  avatarUrl     String?   @map("avatar_url") @db.VarChar(500)
+  gender        Gender
+  dateOfBirth   DateTime  @map("date_of_birth") @db.Date
+  weight        Decimal   @db.Decimal(5, 2)
+  height        Decimal   @db.Decimal(5, 2)
+  bmi           Decimal   @db.Decimal(4, 2)
+  role          UserRole  @default(patient)
+  isVerified    Boolean   @default(false) @map("is_verified")
+  isActive      Boolean   @default(true) @map("is_active")
+  lastLoginAt   DateTime? @map("last_login_at") @db.Timestamptz(6)
+  
+  // Doctor-specific fields
+  licenseNumber String?   @map("license_number") @db.VarChar(100)
+  specialization String? @db.VarChar(255)
+  department    String?   @db.VarChar(255)
+  
+  // Relations
+  profile       PatientProfile?
+  cases         PatientCase[]    @relation("PatientCases")
+  medications   Medication[]
+  medicationLogs MedicationLog[]
+  visionTests   VisionTestResult[]
+  consents      Consent[]
+  auditLogs    AuditLog[]        @relation("UserAuditLogs")
+  createdCases PatientCase[]       @relation("CreatedByDoctor")
+  createdArticles Article[]        @relation("CreatedByUser")
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([phoneNumber], name: "idx_users_phone")
+  @@index([hn], name: "idx_users_hn")
+  @@index([role], name: "idx_users_role")
+  @@index([isActive], name: "idx_users_active")
+  @@map("users")
+}
+
+model PatientProfile {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @unique @map("user_id") @db.Uuid
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Additional profile fields
+  emergencyContact String? @map("emergency_contact") @db.VarChar(255)
+  emergencyPhone   String? @map("emergency_phone") @db.VarChar(20)
+  address          String? @db.Text
+  allergies        String? @db.Text
+  medicalHistory   String? @map("medical_history") @db.Text
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("patient_profiles")
+}
+
+// ============================================
+// MEDICAL RECORDS
+// ============================================
+
+enum CaseStatus {
+  Draft
+  Finalized
+}
+
+model PatientCase {
+  id                String   @id @default(uuid()) @db.Uuid
+  patientId         String   @map("patient_id") @db.Uuid // Primary relation
+  patient           User     @relation("PatientCases", fields: [patientId], references: [id], onDelete: Cascade)
+  hn                String   @db.VarChar(50) // Display identifier
+  patientName       String   @map("patient_name") @db.VarChar(255)
+  date              DateTime @default(now()) @db.Date
+  diagnosis         String   @db.VarChar(255)
+  aiAnalysisText    String?  @map("ai_analysis_text") @db.Text
+  doctorNotes       String?  @map("doctor_notes") @db.Text
+  status            CaseStatus @default(Draft)
+  
+  // Eye examination data
+  leftEyeVisualAcuity      String? @map("left_eye_visual_acuity") @db.VarChar(50)
+  leftEyeIntraocularPressure String? @map("left_eye_intraocular_pressure") @db.VarChar(50)
+  leftEyeDiagnosis         String? @map("left_eye_diagnosis") @db.VarChar(255)
+  leftEyeNote              String? @map("left_eye_note") @db.Text
+  rightEyeVisualAcuity     String? @map("right_eye_visual_acuity") @db.VarChar(50)
+  rightEyeIntraocularPressure String? @map("right_eye_intraocular_pressure") @db.VarChar(50)
+  rightEyeDiagnosis        String? @map("right_eye_diagnosis") @db.VarChar(255)
+  rightEyeNote             String? @map("right_eye_note") @db.Text
+  
+  // Metadata
+  createdBy        String?  @map("created_by") @db.Uuid
+  createdByDoctor  User?    @relation("CreatedByDoctor", fields: [createdBy], references: [id])
+  
+  // Relations
+  images           CaseImage[]
+  checklistItems   ChecklistItem[]
+  
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([patientId], name: "idx_cases_patient")
+  @@index([hn], name: "idx_cases_hn")
+  @@index([date], name: "idx_cases_date")
+  @@index([status], name: "idx_cases_status")
+  @@index([createdBy], name: "idx_cases_created_by")
+  @@map("patient_cases")
+}
+
+enum EyeSide {
+  left
+  right
+  both
+  unknown
+}
+
+model CaseImage {
+  id            String   @id @default(uuid()) @db.Uuid
+  caseId        String   @map("case_id") @db.Uuid
+  case          PatientCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  
+  imageUrl      String   @map("image_url") @db.VarChar(500)
+  thumbnailUrl  String?  @map("thumbnail_url") @db.VarChar(500)
+  storageType   String   @default("local") @map("storage_type") @db.VarChar(20) // 'local' | 's3' | 'supabase'
+  imageType     String   @map("image_type") @db.VarChar(50) // 'slit_lamp' | 'fundus' | 'other'
+  eyeSide       EyeSide  @default(unknown) @map("eye_side")
+  capturedAt    DateTime? @map("captured_at") @db.Timestamptz(6)
+  description   String?  @db.Text
+  order         Int      @default(0) // For multiple images per case
+  fileSize      Int?     @map("file_size") // Size in bytes
+  mimeType      String?   @map("mime_type") @db.VarChar(50)
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([caseId], name: "idx_images_case")
+  @@index([imageType], name: "idx_images_type")
+  @@index([eyeSide], name: "idx_images_eye_side")
+  @@index([capturedAt], name: "idx_images_captured")
+  @@map("case_images")
+}
+
+model ChecklistItem {
+  id            String   @id @default(uuid()) @db.Uuid
+  caseId        String   @map("case_id") @db.Uuid
+  case          PatientCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  
+  category      String   @db.VarChar(100) // 'Lids/Lashes', 'Cornea', etc.
+  label         String   @db.VarChar(255)
+  isObserved    Boolean  @default(false) @map("is_observed")
+  isVerified    Boolean  @default(false) @map("is_verified")
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([caseId], name: "idx_checklist_case")
+  @@index([category], name: "idx_checklist_category")
+  @@map("checklist_items")
+}
+
+// ============================================
+// MEDICATIONS
+// ============================================
+
+enum MedicationType {
+  drop
+  pill
+  other
+}
+
+model Medication {
+  id            String   @id @default(uuid()) @db.Uuid
+  patientId     String   @map("patient_id") @db.Uuid
+  patient       User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  
+  medicineName  String   @map("medicine_name") @db.VarChar(255)
+  type          MedicationType @default(drop)
+  frequency     String   @db.VarChar(100) // '4 times/day', 'Every 6 hours'
+  nextTime      String   @map("next_time") @db.VarChar(10) // '08:00', '14:00'
+  dosage        String?  @db.VarChar(100) // '1 drop', '1 tablet'
+  startDate     DateTime  @default(now()) @map("start_date") @db.Date
+  endDate       DateTime? @map("end_date") @db.Date
+  isActive      Boolean  @default(true) @map("is_active")
+  
+  // Relations
+  logs          MedicationLog[]
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([patientId], name: "idx_medications_patient")
+  @@index([isActive], name: "idx_medications_active")
+  @@index([startDate], name: "idx_medications_start_date")
+  @@map("medications")
+}
+
+model MedicationLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  medicationId  String   @map("medication_id") @db.Uuid
+  medication    Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  patientId     String   @map("patient_id") @db.Uuid
+  patient       User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  
+  scheduledTime DateTime @map("scheduled_time") @db.Timestamptz(6)
+  takenAt       DateTime? @map("taken_at") @db.Timestamptz(6)
+  taken         Boolean  @default(false)
+  notes         String?  @db.Text
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([medicationId], name: "idx_logs_medication")
+  @@index([patientId], name: "idx_logs_patient")
+  @@index([scheduledTime], name: "idx_logs_scheduled")
+  @@index([taken], name: "idx_logs_taken")
+  @@map("medication_logs")
+}
+
+// ============================================
+// VISION TESTS
+// ============================================
+
+enum VisionTestType {
+  AmslerGrid
+  Ishihara
+  RetinalAge
+  VisualAcuity
+  Other
+}
+
+model VisionTestResult {
+  id            String   @id @default(uuid()) @db.Uuid
+  patientId     String   @map("patient_id") @db.Uuid
+  patient       User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  
+  testName      String   @map("test_name") @db.VarChar(100)
+  testType      VisionTestType @map("test_type")
+  result        String   @db.VarChar(50) // 'Normal', 'Abnormal', or specific value
+  details       String?  @db.Text
+  testDate      DateTime @default(now()) @map("test_date") @db.Date
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([patientId], name: "idx_tests_patient")
+  @@index([testName], name: "idx_tests_name")
+  @@index([testDate], name: "idx_tests_date")
+  @@index([testType], name: "idx_tests_type")
+  @@map("vision_test_results")
+}
+
+// ============================================
+// ARTICLES
+// ============================================
+
+model Article {
+  id            String   @id @default(uuid()) @db.Uuid
+  title         String   @db.VarChar(500)
+  category      String   @db.VarChar(100)
+  imageUrl      String   @map("image_url") @db.VarChar(500)
+  content       String   @db.Text
+  excerpt       String?  @db.Text
+  readTime      String   @map("read_time") @db.VarChar(20)
+  publishedAt   DateTime @default(now()) @map("published_at") @db.Timestamptz(6)
+  isPublished   Boolean  @default(true) @map("is_published")
+  viewCount     Int      @default(0) @map("view_count")
+  
+  createdBy     String?  @map("created_by") @db.Uuid
+  createdByUser User?    @relation("CreatedByUser", fields: [createdBy], references: [id])
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([category], name: "idx_articles_category")
+  @@index([isPublished, publishedAt], name: "idx_articles_published")
+  @@index([viewCount], name: "idx_articles_views")
+  @@map("articles")
+}
+
+// ============================================
+// PDPA & CONSENT
+// ============================================
+
+enum ConsentType {
+  terms
+  privacy
+  data_usage
+}
+
+model Consent {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  termsVersion  String   @map("terms_version") @db.VarChar(20)
+  consentType   ConsentType @map("consent_type")
+  accepted      Boolean  @default(false)
+  acceptedAt    DateTime? @map("accepted_at") @db.Timestamptz(6)
+  ipAddress     String?  @map("ip_address") @db.VarChar(45)
+  userAgent     String?  @map("user_agent") @db.Text
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([userId], name: "idx_consents_user")
+  @@index([termsVersion], name: "idx_consents_version")
+  @@index([consentType], name: "idx_consents_type")
+  @@map("consents")
+}
+
+model TermsVersion {
+  id            String   @id @default(uuid()) @db.Uuid
+  version       String   @unique @db.VarChar(20)
+  content       String   @db.Text
+  effectiveDate DateTime @map("effective_date") @db.Date
+  isActive      Boolean  @default(true) @map("is_active")
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([isActive], name: "idx_terms_active")
+  @@index([version], name: "idx_terms_version")
+  @@map("terms_versions")
+}
+
+// ============================================
+// AUDIT & LOGGING
+// ============================================
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  EXPORT
+  SHARE
+}
+
+model AuditLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String?  @map("user_id") @db.Uuid
+  user          User?    @relation("UserAuditLogs", fields: [userId], references: [id], onDelete: SetNull)
+  
+  action        AuditAction
+  resourceType  String   @map("resource_type") @db.VarChar(50) // 'PatientCase', 'Medication', etc.
+  resourceId    String?  @map("resource_id") @db.Uuid
+  details       String?  @db.Text // JSON string of additional details
+  ipAddress     String?  @map("ip_address") @db.VarChar(45)
+  userAgent     String?  @map("user_agent") @db.Text
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([userId], name: "idx_audit_user")
+  @@index([action], name: "idx_audit_action")
+  @@index([resourceType, resourceId], name: "idx_audit_resource")
+  @@index([createdAt], name: "idx_audit_created")
+  @@map("audit_logs")
+}
+
+// ============================================
+// OTP (for authentication)
+// ============================================
+
+model OTP {
+  id            String   @id @default(uuid()) @db.Uuid
+  phoneNumber   String   @map("phone_number") @db.VarChar(20)
+  code          String   @db.VarChar(10)
+  expiresAt     DateTime @map("expires_at") @db.Timestamptz(6)
+  isUsed        Boolean  @default(false) @map("is_used")
+  attempts      Int      @default(0)
+  
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([phoneNumber], name: "idx_otps_phone")
+  @@index([code], name: "idx_otps_code")
+  @@index([expiresAt], name: "idx_otps_expires")
+  @@index([isUsed], name: "idx_otps_used")
+  @@map("otps")
+}
+
