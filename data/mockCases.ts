@@ -23,13 +23,15 @@ const createChecklist = (items: Array<{ category: string; label: string; isObser
 });
 
 // Mock Cases Data
+// TODO: แทนที่ imageUrl ด้วย URL รูป Slit Lamp จริงที่อัปโหลดแล้ว
+// ดูคำแนะนำใน data/IMAGE_SETUP_GUIDE.md
 export const MOCK_PATIENT_CASES: PatientCase[] = [
   {
     id: 'case-001',
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 12, 15),
-    imageUrl: 'https://picsum.photos/800/600?random=1',
+    imageUrl: 'https://media.discordapp.net/attachments/865267722606870600/1454967275919773992/images_2.jfif?ex=6953035e&is=6951b1de&hm=a3313a55ae9de36b8d3d5550bc221661b5d6fb57000db12361fa44dc79d90804&=&format=webp&width=800&height=600',
     aiAnalysisText: 'พบความผิดปกติเล็กน้อยที่บริเวณ macula ของตาขวา แนะนำให้ติดตามอาการอย่างใกล้ชิด และมาตรวจซ้ำในอีก 3 เดือน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -59,7 +61,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 11, 20),
-    imageUrl: 'https://picsum.photos/800/600?random=2',
+    imageUrl: 'https://picsum.photos/800/600?random=2', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
     aiAnalysisText: 'ผลการตรวจพบว่าตาขวามีอาการดีขึ้นเมื่อเทียบกับการตรวจครั้งก่อน แนะนำให้ใช้ยาตามที่แพทย์สั่งอย่างสม่ำเสมอ',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -89,7 +91,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 10, 5),
-    imageUrl: 'https://picsum.photos/800/600?random=3',
+    imageUrl: 'https://picsum.photos/800/600?random=3', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
     aiAnalysisText: 'การตรวจครั้งนี้เป็นการตรวจสุขภาพตาเบื้องต้น พบว่าสุขภาพตาทั้งสองข้างอยู่ในเกณฑ์ปกติ แนะนำให้มาตรวจซ้ำทุก 6 เดือน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
@@ -119,7 +121,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 9, 12),
-    imageUrl: 'https://picsum.photos/800/600?random=4',
+    imageUrl: 'https://picsum.photos/800/600?random=4', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
     aiAnalysisText: 'ผู้ป่วยมาด้วยอาการตาแห้งและระคายเคือง ตรวจพบว่ามีอาการตาแห้งเล็กน้อย แนะนำให้ใช้น้ำตาเทียมและหลีกเลี่ยงการจ้องหน้าจอเป็นเวลานาน',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Mild dryness', isObserved: true, isVerified: true },
@@ -149,7 +151,7 @@ export const MOCK_PATIENT_CASES: PatientCase[] = [
     hn: 'HN-123456',
     patientName: 'คุณสมชาย ใจดี',
     date: createDate(2024, 8, 18),
-    imageUrl: 'https://picsum.photos/800/600?random=5',
+    imageUrl: 'https://picsum.photos/800/600?random=5', // TODO: แทนที่ด้วย URL รูป Slit Lamp จริง
     aiAnalysisText: 'การตรวจพบว่าตาขวามีอาการดีขึ้นมากหลังจากใช้ยาตามที่แพทย์สั่ง แนะนำให้ติดตามอาการต่อเนื่อง',
     checklist: createChecklist([
       { category: 'Cornea', label: 'Clear', isObserved: true, isVerified: true },
