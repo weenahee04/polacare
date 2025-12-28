@@ -53,6 +53,10 @@ export const CaseDetailView: React.FC<CaseDetailViewProps> = ({ data, onBack, on
                 src={data.imageUrl} 
                 alt="Slit Lamp Exam" 
                 className="w-full h-full object-contain"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://via.placeholder.com/800x600/1e293b/ffffff?text=Slit+Lamp+Image';
+                }}
             />
             <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-xs font-bold font-kanit flex items-center gap-2 border border-white/10">
                 <ScanEye className="h-4 w-4 text-blue-400" />

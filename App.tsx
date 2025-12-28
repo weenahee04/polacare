@@ -371,7 +371,11 @@ const AppContent: React.FC = () => {
                                     <div className="h-14 w-14 rounded-xl bg-slate-200 overflow-hidden flex-shrink-0 relative">
                                         <img 
                                           src={record.imageUrl} 
-                                          alt="Exam" 
+                                          alt="Exam"
+                                          onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = 'https://via.placeholder.com/200x200/1e293b/ffffff?text=No+Image';
+                                          }} 
                                           className="h-full w-full object-cover"
                                           onError={(e) => {
                                             (e.target as HTMLImageElement).src = 'https://via.placeholder.com/100x100?text=No+Image';
