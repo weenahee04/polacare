@@ -5,8 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "npm run build:clean && tsc",
-    "build:clean": "rimraf dist",
+    "build": "rm -rf dist && tsc",
     "start": "node dist/server.js",
     "setup": "npm install && npx prisma generate",
     "db:migrate": "prisma migrate dev",
